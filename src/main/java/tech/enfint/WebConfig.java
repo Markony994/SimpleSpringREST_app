@@ -1,2 +1,15 @@
-package tech.enfint;public class WebConfing {
+package tech.enfint;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+@Configuration
+@EnableWebMvc
+@ComponentScan(basePackages = "tech.enfint.controller")
+public class WebConfig
+{
+
+
+
 }
