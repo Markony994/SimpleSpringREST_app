@@ -1,4 +1,4 @@
-package tech.enfint.model;
+package tech.enfint.persistence.entity;
 
 public class Autor
 {

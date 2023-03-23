@@ -1,4 +1,4 @@
-package tech.enfint.model;
+package tech.enfint.persistence.entity;
 
 import java.util.Date;
 import java.util.UUID;
@@ -6,7 +6,7 @@ import java.util.UUID;
 public class Post
 {
     private String text;
-    private final UUID uuid;
+    private UUID uuid;
     private Autor autor;
     private Date creationDate;
 
@@ -14,11 +14,10 @@ public class Post
     {
         this.text = text;
         this.autor = autor;
-        this.uuid = UUID.randomUUID();
         creationDate = new Date();
     }
 
-    public void setText(String text) {
+    public void setText(String text){
         this.text = text;
     }
 
@@ -32,6 +31,10 @@ public class Post
 
     public String getText() {
         return text;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public UUID getUuid() {
