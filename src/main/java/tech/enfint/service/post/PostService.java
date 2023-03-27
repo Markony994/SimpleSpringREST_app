@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Service
 public class PostService
 {
-
     private final PostRepository repository;
     private final PostMapper postMapper;
 

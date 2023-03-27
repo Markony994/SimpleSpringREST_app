@@ -54,7 +54,7 @@ public class PostController  {
     @GetMapping(path = "findByCreationDate/{creationDate}", produces = "application/json")
     public List<PostResponseDTO> getPostsByCreationDate(
             @PathVariable(name = "creationDate")
-            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS") LocalDateTime creationDate)
+            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime creationDate)
     {
 
         return postService.getPostsByCreationDate(creationDate);

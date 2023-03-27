@@ -5,6 +5,7 @@ import tech.enfint.persistence.entity.Autor;
 import tech.enfint.persistence.entity.Post;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 @Component
 public class PostRepository
 {
-    private  final ConcurrentHashMap<UUID, Post> posts = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, Post> posts = new ConcurrentHashMap<>();
 
     public Post save(Post post)
     {
@@ -34,9 +35,7 @@ public class PostRepository
 
     public List<Post> getAllPosts()
     {
-        return posts.entrySet().stream()
-                .map(uuidPostEntry -> uuidPostEntry.getValue())
-                .collect(Collectors.toList());
+        return new ArrayList<>(posts.values());
     }
 
     public Post getPost(UUID uuid)
@@ -46,17 +45,15 @@ public class PostRepository
 
     public List<Post> getPostsByCreationDate(LocalDateTime creationDate)
     {
-        return posts.entrySet().stream()
-                .takeWhile(r -> r.getValue().getCreationDate() == creationDate)
-                .map(uuidPostEntry -> uuidPostEntry.getValue())
+        return posts.values().stream()
+                .filter(post -> post.getCreationDate() == creationDate)
                 .collect(Collectors.toList());
     }
 
     public List<Post> getPostsByAutor(Autor autor)
     {
-        return posts.entrySet().stream()
-                .map(uuidPostEntry -> uuidPostEntry.getValue())
-                .takeWhile(post -> post.getAutor() == autor)
+        return posts.values().stream()
+                .filter(post -> post.getAutor() == autor)
                 .collect(Collectors.toList());
     }
 

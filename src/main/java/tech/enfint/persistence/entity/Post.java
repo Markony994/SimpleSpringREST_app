@@ -1,5 +1,7 @@
 package tech.enfint.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -8,6 +10,7 @@ public class Post
     private String text;
     private UUID uuid;
     private Autor autor;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
 
     public Post(String text, Autor autor)
@@ -45,6 +48,7 @@ public class Post
         return autor;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
