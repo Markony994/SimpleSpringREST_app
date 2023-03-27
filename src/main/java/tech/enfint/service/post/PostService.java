@@ -26,11 +26,9 @@ public class PostService
 
     public List<PostResponseDTO> getAllPosts()
     {
-        return repository.getAllPosts().stream().map(post ->
-
-            postMapper.postToPostResponseDto(post)
-
-        ).collect(Collectors.toList());
+        return repository.getAllPosts().stream()
+                .map(postMapper::postToPostResponseDto)
+                .collect(Collectors.toList());
     }
 
     public PostResponseDTO getPost(UUID uuid)
@@ -45,7 +43,7 @@ public class PostService
         List<Post> _posts = repository.getPostsByCreationDate(creationDate);
 
         return _posts.stream()
-                .map(post -> postMapper.postToPostResponseDto(post))
+                .map(postMapper::postToPostResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -54,7 +52,7 @@ public class PostService
         List<Post> _posts = repository.getPostsByAutor(autor);
 
         return _posts.stream()
-                .map(post -> postMapper.postToPostResponseDto(post))
+                .map(postMapper::postToPostResponseDto)
                 .collect(Collectors.toList());
     }
 

@@ -42,4 +42,5 @@ public class PostResponseDTO
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
+
 }
