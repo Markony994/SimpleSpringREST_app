@@ -1,6 +1,6 @@
 package tech.enfint.persistence.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Post
@@ -8,13 +8,13 @@ public class Post
     private String text;
     private UUID uuid;
     private Autor autor;
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
     public Post(String text, Autor autor)
     {
         this.text = text;
         this.autor = autor;
-        creationDate = new Date();
+        creationDate = LocalDateTime.now();
     }
 
     public void setText(String text){
@@ -25,7 +25,7 @@ public class Post
         this.autor = autor;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -45,7 +45,7 @@ public class Post
         return autor;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 

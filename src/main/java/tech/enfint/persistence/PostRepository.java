@@ -1,35 +1,63 @@
 package tech.enfint.persistence;
 
-import tech.enfint.dto.PostResponseDTO;
+import org.springframework.stereotype.Component;
+import tech.enfint.persistence.entity.Autor;
 import tech.enfint.persistence.entity.Post;
-import tech.enfint.service.post.PostMapper;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
+@Component
 public class PostRepository
 {
-    private static final ConcurrentHashMap<UUID, Post> posts = new ConcurrentHashMap<>();
+    private  final ConcurrentHashMap<UUID, Post> posts = new ConcurrentHashMap<>();
 
-    public static Post save(Post post)
+    public Post save(Post post)
     {
-        UUID uuid = UUID.randomUUID();
+        if(post.getUuid() == null)
+        {
+            UUID uuid = UUID.randomUUID();
+            post.setUuid(uuid);
 
-        post.setUuid(uuid);
-        posts.put(uuid, post);
+            posts.put(uuid, post);
+        }
+        else
+        {
+            posts.computeIfPresent(post.getUuid(), (k,v) -> post);
+        }
+
         return post;
     }
 
-    public static ConcurrentHashMap<UUID, PostResponseDTO> getPosts()
+    public List<Post> getAllPosts()
     {
-        ConcurrentHashMap<UUID, PostResponseDTO> response = new ConcurrentHashMap<>();
+        return posts.entrySet().stream()
+                .map(uuidPostEntry -> uuidPostEntry.getValue())
+                .collect(Collectors.toList());
+    }
 
-        posts.forEach((uuid, post) ->
-        {
-            response.put(uuid, PostMapper.postToPostResponseDto(post));
-        });
+    public Post getPost(UUID uuid)
+    {
+        return  posts.get(uuid);
+    }
 
-        return response;
+    public List<Post> getPostsByCreationDate(LocalDateTime creationDate)
+    {
+        return posts.entrySet().stream()
+                .takeWhile(r -> r.getValue().getCreationDate() == creationDate)
+                .map(uuidPostEntry -> uuidPostEntry.getValue())
+                .collect(Collectors.toList());
+    }
+
+    public List<Post> getPostsByAutor(Autor autor)
+    {
+        return posts.entrySet().stream()
+                .map(uuidPostEntry -> uuidPostEntry.getValue())
+                .takeWhile(post -> post.getAutor() == autor)
+                .collect(Collectors.toList());
     }
 
 }

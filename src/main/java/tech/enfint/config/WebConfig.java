@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "tech.enfint.inbound.controllers")
+@ComponentScan(basePackages = "tech.enfint")
 public class WebConfig  implements WebApplicationInitializer
 {
 

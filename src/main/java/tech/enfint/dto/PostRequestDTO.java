@@ -1,17 +1,10 @@
 package tech.enfint.dto;
 
-public class CreatePostRequestDTO
+public class PostRequestDTO
 {
     private String text;
     private String autorName;
     private String autorSurname;
-
-    public CreatePostRequestDTO(String text, String autorName, String autorSurname)
-    {
-        this.text = text;
-        this.autorName = autorName;
-        this.autorSurname = autorSurname;
-    }
 
     public String getText() {
         return text;
@@ -24,7 +17,5 @@ public class CreatePostRequestDTO
     public String getAutorSurname() {
         return autorSurname;
     }
-
-
 
 }

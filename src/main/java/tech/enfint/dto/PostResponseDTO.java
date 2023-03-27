@@ -1,6 +1,6 @@
 package tech.enfint.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class PostResponseDTO
@@ -9,9 +9,9 @@ public class PostResponseDTO
     private UUID uuid;
     private String name;
     private String surname;
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
-    public PostResponseDTO(String text, UUID uuid, String name, String surname, Date creationDate) {
+    public PostResponseDTO(String text, UUID uuid, String name, String surname, LocalDateTime creationDate) {
         this.text = text;
         this.uuid = uuid;
         this.name = name;
@@ -35,7 +35,7 @@ public class PostResponseDTO
         return surname;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 }
