@@ -26,10 +26,8 @@ public class PostController  {
     @GetMapping(produces = "application/json")
     public List<PostResponseDTO> getPosts()
     {
-
         return postService.getAllPosts();
-
-    }//public ConcurrentHashMap<UUID, PostResponseDTO> getPosts()
+    }
 
     @PostMapping(produces = "application/json", consumes = "application/json")
     public ResponseEntity<PostResponseDTO> addPost(@RequestBody PostRequestDTO postRequestDTO) throws URISyntaxException
@@ -45,7 +43,7 @@ public class PostController  {
         return postService.getAllPosts();
     }
 
-    @PutMapping(path = "findByID/{id}", produces = "application/json")
+    @PutMapping(path = "update/{id}", produces = "application/json", consumes = "application/json")
     public void updatePost(@PathVariable(name = "id")UUID id, @RequestBody PostRequestDTO postRequestDTO)
     {
         postService.updatePost(postRequestDTO, id);
@@ -56,8 +54,14 @@ public class PostController  {
             @PathVariable(name = "creationDate")
             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime creationDate)
     {
-
         return postService.getPostsByCreationDate(creationDate);
+    }
+
+    @GetMapping(path = "findByUUID/{uuid}", produces = "application/json")
+    public PostResponseDTO getPostByUUID(
+            @PathVariable(name = "uuid") UUID uuid)
+    {
+        return postService.getPostByUUID(uuid);
     }
 
     @GetMapping(path = "/postsByAutor", produces = "application/json")

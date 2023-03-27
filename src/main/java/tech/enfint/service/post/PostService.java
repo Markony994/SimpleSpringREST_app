@@ -70,4 +70,12 @@ public class PostService
         return postMapper.postToPostResponseDto(_post);
     }
 
+    public PostResponseDTO getPostByUUID(UUID uuid)
+    {
+        Post _post = repository.getPostByUUID(uuid);
+
+        return  _post != null ?  postMapper.postToPostResponseDto(_post) :
+                new PostResponseDTO(null, null, null, null, null);
+    }
+
 }

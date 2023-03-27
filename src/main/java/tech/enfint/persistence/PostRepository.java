@@ -43,18 +43,28 @@ public class PostRepository
         return  posts.get(uuid);
     }
 
-    public List<Post> getPostsByCreationDate(LocalDateTime creationDate)
+    public List<Post> getPostsByCreationDate(LocalDateTime  creationDate)
     {
         return posts.values().stream()
-                .filter(post -> post.getCreationDate() == creationDate)
+                .filter(post ->
+                        post.getCreationDate().equals(creationDate))
                 .collect(Collectors.toList());
     }
 
     public List<Post> getPostsByAutor(Autor autor)
     {
         return posts.values().stream()
-                .filter(post -> post.getAutor() == autor)
+                .filter(post ->
+                        post.getAutor().getName().equals(autor.getName()) &&
+                                post.getAutor().getSurname().equals(autor.getSurname()))
                 .collect(Collectors.toList());
+    }
+
+    public Post getPostByUUID(UUID uuid)
+    {
+
+        return  posts.get(uuid);
+
     }
 
 }

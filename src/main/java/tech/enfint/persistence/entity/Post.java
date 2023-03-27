@@ -1,8 +1,7 @@
 package tech.enfint.persistence.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Post
@@ -10,14 +9,15 @@ public class Post
     private String text;
     private UUID uuid;
     private Autor autor;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     public Post(String text, Autor autor)
     {
         this.text = text;
         this.autor = autor;
-        creationDate = LocalDateTime.now();
+        creationDate = LocalDateTime.parse(LocalDateTime.now().format(formatter));
     }
 
     public void setText(String text){
@@ -48,9 +48,8 @@ public class Post
         return autor;
     }
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     public LocalDateTime getCreationDate() {
-        return creationDate;
+        return  creationDate;
     }
 
     @Override
