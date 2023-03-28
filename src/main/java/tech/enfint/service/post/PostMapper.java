@@ -9,11 +9,9 @@ import tech.enfint.persistence.entity.Post;
 import java.util.UUID;
 
 @Component
-public class PostMapper
-{
+public class PostMapper {
 
-    public Post postDtoToPost(PostRequestDTO postRequestDTO)
-    {
+    public Post postDtoToPost(PostRequestDTO postRequestDTO) {
         return new Post(
                 postRequestDTO.getText(),
                 new Autor(
@@ -22,16 +20,14 @@ public class PostMapper
                 ));
     }
 
-    public Post postDtoToPost(PostRequestDTO postRequestDTO, UUID id)
-    {
+    public Post postDtoToPost(PostRequestDTO postRequestDTO, UUID id) {
         var postResult = postDtoToPost(postRequestDTO);
         postResult.setUuid(id);
 
         return postResult;
     }
 
-    public PostResponseDTO postToPostResponseDto(Post post)
-    {
+    public PostResponseDTO postToPostResponseDto(Post post) {
         return new PostResponseDTO(
                 post.getText(),
                 post.getUuid(),

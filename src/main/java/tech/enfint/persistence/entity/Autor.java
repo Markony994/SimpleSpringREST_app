@@ -1,7 +1,6 @@
 package tech.enfint.persistence.entity;
 
-public class Autor
-{
+public class Autor {
     private String name;
     private String surname;
 

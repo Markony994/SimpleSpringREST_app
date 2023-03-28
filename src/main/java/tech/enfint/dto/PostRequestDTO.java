@@ -1,7 +1,6 @@
 package tech.enfint.dto;
 
-public class PostRequestDTO
-{
+public class PostRequestDTO {
     private String text;
     private String autorName;
     private String autorSurname;

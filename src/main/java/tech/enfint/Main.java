@@ -5,8 +5,7 @@ import org.apache.catalina.startup.Tomcat;
 import java.io.File;
 import java.io.IOException;
 
-public class Main
-{
+public class Main {
     private static final int PORT = 9000;
 
     public static void main(String[] args) throws Exception {

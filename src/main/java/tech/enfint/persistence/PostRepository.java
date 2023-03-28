@@ -3,6 +3,7 @@ package tech.enfint.persistence;
 import org.springframework.stereotype.Component;
 import tech.enfint.persistence.entity.Autor;
 import tech.enfint.persistence.entity.Post;
+import tech.enfint.persistence.exception.PostDoesntExistException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,47 +13,45 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Component
-public class PostRepository
-{
+public class PostRepository {
     private final ConcurrentHashMap<UUID, Post> posts = new ConcurrentHashMap<>();
 
-    public Post save(Post post)
-    {
-        if(post.getUuid() == null)
+    public Post save(Post post) throws PostDoesntExistException {
+        if (post.getUuid() == null)
         {
             UUID uuid = UUID.randomUUID();
             post.setUuid(uuid);
 
             posts.put(uuid, post);
         }
+        else if(posts.contains(post))
+        {
+            posts.compute(post.getUuid(), (k, v) -> post);
+        }
         else
         {
-            posts.computeIfPresent(post.getUuid(), (k,v) -> post);
+            throw new PostDoesntExistException("Post with that uuid doesn't exist");
         }
 
         return post;
     }
 
-    public List<Post> getAllPosts()
-    {
+    public List<Post> getAllPosts() {
         return new ArrayList<>(posts.values());
     }
 
-    public Post getPost(UUID uuid)
-    {
-        return  posts.get(uuid);
+    public Post getPost(UUID uuid) {
+        return posts.get(uuid);
     }
 
-    public List<Post> getPostsByCreationDate(LocalDateTime  creationDate)
-    {
+    public List<Post> getPostsByCreationDate(LocalDateTime creationDate) {
         return posts.values().stream()
                 .filter(post ->
                         post.getCreationDate().equals(creationDate))
                 .collect(Collectors.toList());
     }
 
-    public List<Post> getPostsByAutor(Autor autor)
-    {
+    public List<Post> getPostsByAutor(Autor autor) {
         return posts.values().stream()
                 .filter(post ->
                         post.getAutor().getName().equals(autor.getName()) &&
@@ -60,10 +59,9 @@ public class PostRepository
                 .collect(Collectors.toList());
     }
 
-    public Post getPostByUUID(UUID uuid)
-    {
+    public Post getPostByUUID(UUID uuid) {
 
-        return  posts.get(uuid);
+        return posts.get(uuid);
 
     }
 
