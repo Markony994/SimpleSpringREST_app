@@ -28,9 +28,8 @@ public class PostController {
 
     @GetMapping(produces = "application/json")
     public List<PostResponseDTO> getPosts() {
-        throw new ArithmeticException();
-//        return postService.getAllPosts();
 
+        return postService.getAllPosts();
     }
 
     @PostMapping(produces = "application/json", consumes = "application/json")
