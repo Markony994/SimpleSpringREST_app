@@ -1,9 +1,11 @@
 package tech.enfint.inbound.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.ResponseStatusException;
 import tech.enfint.dto.PostRequestDTO;
 import tech.enfint.dto.PostResponseDTO;
@@ -14,7 +16,6 @@ import tech.enfint.persistence.exception.PostDoesntExistException;
 import tech.enfint.service.post.PostService;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -31,14 +32,13 @@ public class PostController {
     @Logging(logTypes = {FieldType.ERROR})
     @GetMapping(produces = "application/json")
     public List<PostResponseDTO> getPosts() {
-        throw new ArithmeticException();
-//        return postService.getAllPosts();
+        return postService.getAllPosts();
     }
 
     @Logging(logTypes = {FieldType.ERROR})
     @PostMapping(produces = "application/json", consumes = "application/json")
-    public ResponseEntity<PostResponseDTO> addPost(@RequestBody PostRequestDTO postRequestDTO)
-            throws URISyntaxException, PostDoesntExistException {
+    public ResponseEntity<PostResponseDTO> addPost(@RequestBody @Valid  PostRequestDTO postRequestDTO)
+            throws PostDoesntExistException, WebExchangeBindException {
         PostResponseDTO body = postService.savePost(postRequestDTO);
 
         return ResponseEntity.created(URI.create("/posts/" + body.getUuid())).body(body);
@@ -53,7 +53,8 @@ public class PostController {
     @Logging(logTypes = {FieldType.ERROR})
     @PutMapping(path = "update/{id}", produces = "application/json", consumes = "application/json")
     public void updatePost(@PathVariable(name = "id") UUID id,
-                           @RequestBody PostRequestDTO postRequestDTO) throws PostDoesntExistException {
+                           @RequestBody @Valid PostRequestDTO postRequestDTO)
+            throws PostDoesntExistException, WebExchangeBindException {
         postService.updatePost(postRequestDTO, id);
     }
 
