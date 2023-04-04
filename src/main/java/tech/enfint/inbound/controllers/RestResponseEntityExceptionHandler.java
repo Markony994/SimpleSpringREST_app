@@ -61,6 +61,8 @@ public class RestResponseEntityExceptionHandler {
                 throwable.getMessage(),
                 "There was an error, please try again, or submit a ticket.");
 
+        logger.error("Bad request", throwable);
+
         return new ResponseEntity<>(errorDto, new HttpHeaders(), errorDto.getStatus());
     }
 

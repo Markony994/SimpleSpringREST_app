@@ -1,18 +1,30 @@
 package tech.enfint.persistence.entity;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+@Entity
+@Table(name = "Post", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "UUID")})
 public class Post {
-    private String text;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID uuid;
+    private String text;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Autor autor;
     private LocalDateTime creationDate;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    public Post()
+    {
+
+    }
 
     public Post(String text, Autor autor) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         this.text = text;
         this.autor = autor;
         creationDate = LocalDateTime.parse(LocalDateTime.now().format(formatter));
