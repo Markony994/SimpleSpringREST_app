@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Post", uniqueConstraints = {
+@Table(name = "Autor", uniqueConstraints = {
         @UniqueConstraint(columnNames = "UUID")})
 public class Autor
 {
