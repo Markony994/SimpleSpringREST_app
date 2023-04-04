@@ -6,22 +6,18 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tech.enfint.persistence.entity.Autor;
 import tech.enfint.persistence.entity.Post;
 import tech.enfint.persistence.exception.PostDoesntExistException;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Component
 public class PostRepository {
     @Autowired
     private SessionFactory sessionFactory;
-    private final ConcurrentHashMap<UUID, Post> posts = new ConcurrentHashMap<>();
-
+    //private final ConcurrentHashMap<UUID, Post> posts = new ConcurrentHashMap<>();
 
     public Post save(Post post) throws PostDoesntExistException
     {
@@ -97,56 +93,121 @@ public class PostRepository {
     {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
+        List<Post> posts = null;
 
-        try {
+        try
+        {
             tx = session.beginTransaction();
-            List<Post> posts = session.createQuery("FROM Post", Post.class).list();
-//            List<Autor> autors = session.createQuery("FROM Autor", Autor.class).list();
-//
-//            for (Iterator iterator = posts.iterator(); iterator.hasNext();){
-//                Post post = (Post) iterator.next();
-//
-//            }
-
+            posts = session.createQuery("FROM Post", Post.class).list();
 
             tx.commit();
-
-            return posts;
-
         }
         catch (HibernateException e) {
-            if (tx!=null) tx.rollback();
+            if (tx!=null)
+            {
+                tx.rollback();
+            }
+
             e.printStackTrace();
         }
-        finally {
+        finally
+        {
             session.close();
         }
 
-        return null;
-    }
-
-    public Post getPost(UUID uuid) {
-        return posts.get(uuid);
+        return posts;
     }
 
     public List<Post> getPostsByCreationDate(LocalDateTime creationDate) {
-        return posts.values().stream()
-                .filter(post ->
-                        post.getCreationDate().equals(creationDate))
-                .collect(Collectors.toList());
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        List<Post> posts = null;
+
+        try
+        {
+            tx = session.beginTransaction();
+            posts = session.createQuery("FROM Post WHERE creationDate = :date", Post.class)
+                    .setParameter("date", creationDate)
+                    .list();
+
+            tx.commit();
+        }
+        catch (HibernateException e) {
+            if (tx!=null)
+            {
+                tx.rollback();
+            }
+
+            e.printStackTrace();
+        }
+        finally
+        {
+            session.close();
+        }
+
+        return posts;
     }
 
-    public List<Post> getPostsByAutor(Autor autor) {
-        return posts.values().stream()
-                .filter(post ->
-                        post.getAutor().getName().equals(autor.getName()) &&
-                                post.getAutor().getSurname().equals(autor.getSurname()))
-                .collect(Collectors.toList());
+    public List<Post> getPostsByAutorID(UUID autorID) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        List<Post> posts = null;
+
+        try
+        {
+            tx = session.beginTransaction();
+            posts = session.createQuery("SELECT p FROM Post as p join fetch p.autor WHERE p.autorUuid = :autorID", Post.class)
+                    .setParameter("autorID", autorID)
+                    .list();
+
+            tx.commit();
+        }
+        catch (HibernateException e) {
+            if (tx!=null)
+            {
+                tx.rollback();
+            }
+
+            e.printStackTrace();
+        }
+        finally
+        {
+            session.close();
+        }
+
+        return posts;
     }
 
     public Post getPostByUUID(UUID uuid) {
 
-        return posts.get(uuid);
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        Post post = null;
+
+        try
+        {
+            tx = session.beginTransaction();
+            var query = session.createQuery("FROM Post WHERE uuid = :uiid ", Post.class);
+            query.setParameter("uiid", uuid);
+
+            post = query.uniqueResult();
+
+            tx.commit();
+        }
+        catch (HibernateException e) {
+            if (tx!=null)
+            {
+                tx.rollback();
+            }
+
+            e.printStackTrace();
+        }
+        finally
+        {
+            session.close();
+        }
+
+        return post;
 
     }
 

@@ -14,7 +14,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID uuid;
     private String text;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Autor autor;
     private LocalDateTime creationDate;
 
@@ -65,11 +65,10 @@ public class Post {
     @Override
     public String toString() {
         return "Post{" +
-                "text='" + text + '\'' +
-                ", uuid=" + uuid +
+                "uuid=" + uuid +
+                ", text='" + text + '\'' +
                 ", autor=" + autor +
                 ", creationDate=" + creationDate +
                 '}';
     }
-
 }//public class Post

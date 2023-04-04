@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import tech.enfint.dto.PostRequestDTO;
 import tech.enfint.dto.PostResponseDTO;
 import tech.enfint.persistence.PostRepository;
-import tech.enfint.persistence.entity.Autor;
 import tech.enfint.persistence.entity.Post;
 import tech.enfint.persistence.exception.PostDoesntExistException;
 
@@ -30,7 +29,7 @@ public class PostService {
     }
 
     public PostResponseDTO getPost(UUID uuid) {
-        Post _post = repository.getPost(uuid);
+        Post _post = repository.getPostByUUID(uuid);
 
         return postMapper.postToPostResponseDto(_post);
     }
@@ -43,8 +42,8 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostResponseDTO> getPostsByAutor(Autor autor) {
-        List<Post> _posts = repository.getPostsByAutor(autor);
+    public List<PostResponseDTO> getPostsByAutor(UUID autorID) {
+        List<Post> _posts = repository.getPostsByAutorID(autorID);
 
         return _posts.stream()
                 .map(postMapper::postToPostResponseDto)

@@ -29,6 +29,7 @@ public class PostMapper {
 
     public PostResponseDTO postToPostResponseDto(Post post) {
         return new PostResponseDTO(
+                post.getAutor().getUuid(),
                 post.getText(),
                 post.getUuid(),
                 post.getAutor().getName(),

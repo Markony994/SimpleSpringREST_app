@@ -25,6 +25,10 @@ public class Autor
         this.surname = surname;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
     public String getName() {
         return name;
     }
@@ -36,7 +40,8 @@ public class Autor
     @Override
     public String toString() {
         return "Autor{" +
-                "name='" + name + '\'' +
+                "uuid=" + uuid +
+                ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 '}';
     }

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class PostResponseDTO {
+    private UUID autorID;
     private String text;
     private UUID uuid;
     private String name;
@@ -13,12 +14,17 @@ public class PostResponseDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
 
-    public PostResponseDTO(String text, UUID uuid, String name, String surname, LocalDateTime creationDate) {
+    public PostResponseDTO(UUID autorID, String text, UUID uuid, String name, String surname, LocalDateTime creationDate) {
+        this.autorID = autorID;
         this.text = text;
         this.uuid = uuid;
         this.name = name;
         this.surname = surname;
         this.creationDate = creationDate;
+    }
+
+    public UUID getAutorID() {
+        return autorID;
     }
 
     public String getText() {

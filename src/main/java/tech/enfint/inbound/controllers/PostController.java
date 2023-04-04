@@ -11,7 +11,6 @@ import tech.enfint.dto.PostRequestDTO;
 import tech.enfint.dto.PostResponseDTO;
 import tech.enfint.logging.FieldType;
 import tech.enfint.logging.Logging;
-import tech.enfint.persistence.entity.Autor;
 import tech.enfint.persistence.exception.PostDoesntExistException;
 import tech.enfint.service.post.PostService;
 
@@ -75,9 +74,8 @@ public class PostController {
 
     @Logging(logTypes = {FieldType.ERROR})
     @GetMapping(path = "/postsByAutor", produces = "application/json")
-    public List<PostResponseDTO> getPostsByAutor(@RequestParam(name = "name") String name,
-                                                 @RequestParam(name = "surname") String surname) {
-        return postService.getPostsByAutor(new Autor(name, surname));
+    public List<PostResponseDTO> getPostsByAutor(@RequestParam(name = "autorID") UUID autorID) {
+        return postService.getPostsByAutor(autorID);
     }
 
     @Logging(logTypes = {FieldType.ERROR})
