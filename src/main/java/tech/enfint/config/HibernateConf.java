@@ -1,4 +1,4 @@
-package tech.enfint.persistence.hibernate;
+package tech.enfint.config;
 
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;

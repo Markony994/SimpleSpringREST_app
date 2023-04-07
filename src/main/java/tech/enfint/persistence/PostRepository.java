@@ -1,5 +1,6 @@
 package tech.enfint.persistence;
 
+import jakarta.transaction.Transactional;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -7,19 +8,20 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tech.enfint.persistence.entity.Post;
-import tech.enfint.persistence.exception.PostDoesntExistException;
+import tech.enfint.persistence.exception.PostException;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Component
+@Transactional
 public class PostRepository {
     @Autowired
     private SessionFactory sessionFactory;
     //private final ConcurrentHashMap<UUID, Post> posts = new ConcurrentHashMap<>();
 
-    public Post save(Post post) throws PostDoesntExistException
+    public Post save(Post post) throws PostException
     {
         Session session = sessionFactory.openSession();
         Transaction tx = null;
@@ -83,7 +85,7 @@ public class PostRepository {
                 session.close();
             }
 
-            throw new PostDoesntExistException("Post with that uuid doesn't exist");
+            throw new PostException("Post with that uuid doesn't exist");
         }
 
         return post;
@@ -156,7 +158,7 @@ public class PostRepository {
         try
         {
             tx = session.beginTransaction();
-            posts = session.createQuery("SELECT p FROM Post as p join fetch p.autor WHERE p.autorUuid = :autorID", Post.class)
+            posts = session.createQuery("SELECT p FROM Post as p join fetch Autor WHERE p.autor.id = :autorID", Post.class)
                     .setParameter("autorID", autorID)
                     .list();
 

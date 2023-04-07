@@ -11,7 +11,7 @@ import tech.enfint.dto.PostRequestDTO;
 import tech.enfint.dto.PostResponseDTO;
 import tech.enfint.logging.FieldType;
 import tech.enfint.logging.Logging;
-import tech.enfint.persistence.exception.PostDoesntExistException;
+import tech.enfint.persistence.exception.PostException;
 import tech.enfint.service.post.PostService;
 
 import java.net.URI;
@@ -37,50 +37,46 @@ public class PostController {
     @Logging(logTypes = {FieldType.ERROR})
     @PostMapping(produces = "application/json", consumes = "application/json")
     public ResponseEntity<PostResponseDTO> addPost(@RequestBody @Valid  PostRequestDTO postRequestDTO)
-            throws PostDoesntExistException, WebExchangeBindException {
+            throws PostException, WebExchangeBindException {
         PostResponseDTO body = postService.savePost(postRequestDTO);
 
         return ResponseEntity.created(URI.create("/posts/" + body.getUuid())).body(body);
     }
 
     @Logging(logTypes = {FieldType.ERROR})
-    @GetMapping(path = "/{id}", produces = "application/json")
-    public List<PostResponseDTO> getPost(@PathVariable(name = "id") UUID id) {
-        return postService.getAllPosts();
+    @GetMapping(path = {"by/{id}", "by/{creationDate}", "by/{autorID}"}, produces = "application/json")
+    public List<PostResponseDTO> getPost(@PathVariable(name = "id", required = false) UUID id,
+                                         @PathVariable(name = "creationDate", required = false)
+                                         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime creationDate,
+                                         @PathVariable(name = "autorID", required = false) UUID autorID)
+            throws PostException
+    {
+        if(id != null)
+        {
+            return List.of(postService.getPostByUUID(id));
+        }
+        else if(creationDate != null)
+        {
+            return postService.getPostsByCreationDate(creationDate);
+        }
+        else
+        {
+            return postService.getPostsByAutor(autorID);
+        }
+
     }
 
     @Logging(logTypes = {FieldType.ERROR})
     @PutMapping(path = "update/{id}", produces = "application/json", consumes = "application/json")
     public void updatePost(@PathVariable(name = "id") UUID id,
                            @RequestBody @Valid PostRequestDTO postRequestDTO)
-            throws PostDoesntExistException, WebExchangeBindException {
+            throws PostException, WebExchangeBindException {
         postService.updatePost(postRequestDTO, id);
     }
 
     @Logging(logTypes = {FieldType.ERROR})
-    @GetMapping(path = "findByCreationDate/{creationDate}", produces = "application/json")
-    public List<PostResponseDTO> getPostsByCreationDate(
-            @PathVariable(name = "creationDate")
-            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime creationDate) {
-        return postService.getPostsByCreationDate(creationDate);
-    }
-
-    @Logging(logTypes = {FieldType.ERROR})
-    @GetMapping(path = "findByUUID/{uuid}", produces = "application/json")
-    public PostResponseDTO getPostByUUID(
-            @PathVariable(name = "uuid") UUID uuid) throws PostDoesntExistException {
-        return postService.getPostByUUID(uuid);
-    }
-
-    @Logging(logTypes = {FieldType.ERROR})
-    @GetMapping(path = "/postsByAutor", produces = "application/json")
-    public List<PostResponseDTO> getPostsByAutor(@RequestParam(name = "autorID") UUID autorID) {
-        return postService.getPostsByAutor(autorID);
-    }
-
-    @Logging(logTypes = {FieldType.ERROR})
-    @ExceptionHandler(value = PostDoesntExistException.class)
-    public void postDoesntExistHandler()
+    @ExceptionHandler(value = PostException.class)
+    public void postExceptionHandler()
     {
         throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND);
