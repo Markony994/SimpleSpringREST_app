@@ -44,11 +44,11 @@ public class PostController {
     }
 
     @Logging(logTypes = {FieldType.ERROR})
-    @GetMapping(path = {"by/{id}", "by/{creationDate}", "by/{autorID}"}, produces = "application/json")
-    public List<PostResponseDTO> getPost(@PathVariable(name = "id", required = false) UUID id,
-                                         @PathVariable(name = "creationDate", required = false)
+    @GetMapping(path = {"by{id}", "by{creationDate}", "by{autorID}"}, produces = "application/json")
+    public List<PostResponseDTO> getPost(@RequestParam(name = "id", required = false) UUID id,
+                                         @RequestParam(name = "creationDate", required = false)
                                          @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime creationDate,
-                                         @PathVariable(name = "autorID", required = false) UUID autorID)
+                                         @RequestParam(name = "autorID", required = false) UUID autorID)
             throws PostException
     {
         if(id != null)
